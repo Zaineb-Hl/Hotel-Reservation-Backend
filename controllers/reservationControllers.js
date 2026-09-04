@@ -18,6 +18,13 @@ const createReservation = async (req, res) => {
         // Récupération des données envoyées dans le corps de la requête
         const { name, email, phone, checkin, checkout, guests, roomId } = req.body;
 
+        // Vérification du type des données reçues
+        // On s'assure que le nom, l'email et le numéro de téléphone
+        // sont bien des chaînes de caractères avant de poursuivre le traitement.
+        if (typeof email !== "string" || typeof name !== "string" || typeof phone !== "string") {
+            return res.status(400).json({ success: false, message: "Format de données invalide" });
+        }
+
 
         // ------------------------------------------------------------
         // 1. Vérification des champs obligatoires
@@ -431,4 +438,4 @@ const deleteReservation = async (req, res) => {
 };
 
 
-export {createReservation, getAllReservation, deleteReservation };
+export { createReservation, getAllReservation, deleteReservation };

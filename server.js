@@ -6,6 +6,8 @@ import connectCloudinary from "./config/cloudinary.js"
 import hotelRouter from "./routes/hotelRoute.js"
 import reservationRouter from "./routes/reservationRoute.js"
 import userRouter from "./routes/userRoute.js"
+import mongoSanitize from 'express-mongo-sanitize'   
+
 
 const app= express()
 
@@ -16,6 +18,8 @@ connectCloudinary()
 
 app.use(cors())
 app.use (express.json())
+app.use(mongoSanitize())   
+
 
 app.use('/api/hotel' , hotelRouter)
 app.use('/api/reservations', reservationRouter)
