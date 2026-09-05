@@ -144,15 +144,8 @@ const createReservation = async (req, res) => {
         // - un nombre
         // - un entier
         // - supérieur ou égal à 1
-        if (
-            Number.isNaN(numericGuests) ||
-            !Number.isInteger(numericGuests) ||
-            numericGuests < 1
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Le nombre de personnes est invalide"
-            });
+        if (Number.isNaN(numericGuests) || !Number.isInteger(numericGuests) || numericGuests < 1) {
+            return res.status(400).json({ success: false, message: "Le nombre de personnes doit être un entier valide" });
         }
 
 
