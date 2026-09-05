@@ -373,6 +373,71 @@ const getAllReservation = async (req, res) => {
     }
 };
 
+// ============================================================
+// FONCTION : annuler une réservation
+//
+// Cette fonction permet d'annuler une réservation à partir de son ID.
+// Au lieu de supprimer la réservation, son statut est simplement
+// modifié en "cancelled" afin de conserver son historique.
+// ============================================================
+const cancelReservation = async (req, res) => {
+    try {
+
+        // Récupération de l'ID de la réservation depuis les paramètres de l'URL
+        // Exemple : /cancel/65abc123...
+        const { id } = req.params;
+
+
+        // Vérification du format de l'ID MongoDB
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Identifiant invalide"
+            });
+        }
+
+
+        // Recherche de la réservation par son ID
+        // puis modification de son statut en "cancelled"
+        // L'option { new: true } permet de retourner la réservation
+        // après sa modification
+        const reservation = await reservationModel.findByIdAndUpdate(
+            id,
+            { status: "cancelled" },
+            { new: true }
+        );
+
+
+        // Si aucune réservation n'a été trouvée avec cet ID
+        if (!reservation) {
+            return res.status(404).json({
+                success: false,
+                message: "Réservation introuvable"
+            });
+        }
+
+
+        // Si l'annulation a réussi, on retourne
+        // un message de confirmation ainsi que la réservation modifiée
+        res.json({
+            success: true,
+            message: "Réservation annulée",
+            reservation
+        });
+
+
+    } catch (error) {
+
+        // Affichage de l'erreur dans la console
+        console.log(error);
+
+        // Réponse en cas d'erreur serveur
+        res.status(500).json({
+            success: false,
+            message: "Erreur lors de l'annulation"
+        });
+    }
+};
 
 // ============================================================
 // FONCTION : supprimer une réservation
@@ -431,4 +496,4 @@ const deleteReservation = async (req, res) => {
 };
 
 
-export { createReservation, getAllReservation, deleteReservation };
+export { createReservation, getAllReservation,cancelReservation, deleteReservation };
